@@ -1,0 +1,52 @@
+[
+    {
+        "description": "pointer ref to object containing special chars",
+        "schema": {
+            "properties": {
+                "foo/bar": {"type": "integer"},
+                "bar": {"$ref": "#/properties/foo%2fbar"}
+            }
+        },
+        "tests": [
+            {
+                "description": "match",
+                "data": {"bar": 3},
+                "valid": true
+            },
+            {
+                "description": "mismatch",
+                "data": {"bar": true},
+                "valid": false
+            }
+        ]
+    },
+    {
+        "description": "relative pointer to definitions array",
+        "schema": {
+            "definitions": {
+              "array_schema": {
+                "items": [
+                  {"type": "integer"},
+                  {"type": "string"}
+                ]
+              }
+            },
+            "items": [
+                {"$ref": "#/definitions/array_schema/items/1"},
+                {"$ref": "#/definitions/array_schema/items/0"}
+            ]
+        },
+        "tests": [
+            {
+                "description": "match array",
+                "data": ["foo", 2],
+                "valid": true
+            },
+            {
+                "description": "mismatch array",
+                "data": [1, "foo"],
+                "valid": false
+            }
+        ]
+    }
+]
